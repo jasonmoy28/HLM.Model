@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_summary_with_plot.R
 \name{model_summary_with_plot}
 \alias{model_summary_with_plot}
-\title{Model_summary_with_plot}
+\title{Model summary with interaction plot}
 \usage{
 model_summary_with_plot(
   data,
@@ -14,7 +14,7 @@ model_summary_with_plot(
   id,
   graph_label_name = NULL,
   estimation_method = "REML",
-  optim_control = "optim",
+  opt_control = NULL,
   na.action = na.exclude,
   return_result = "none",
   print_result = "both"
@@ -29,23 +29,23 @@ model_summary_with_plot(
 
 \item{level_2_factors}{vector. Higher level variables (e.g., country-level)}
 
-\item{two_way_interaction_factor}{vector of length more than 2. Default to `null``}
+\item{two_way_interaction_factor}{vector of length more than 2. Default to `null`. vector in the form of c(predict_var1, predict_var2)}
 
-\item{three_way_interaction_factor}{vector of length 3.}
+\item{three_way_interaction_factor}{vector of length 3.  Default to `null`. vector in the form of c(predict_var1, predict_var2,predict_var3)}
 
 \item{id}{character or vector of length 1. The nesting variable (e.g. country)}
 
-\item{graph_label_name}{vector of length 2 for two-interaction graph. vector of length 3 for three-way interaction graph. switch function. Vector should be passed in the form of c(response_var, predict_var1, predict_var2). Function should be passed as a switch function. See `HLM.Model::graph_label_name`.}
+\item{graph_label_name}{vector of length 2 for two-interaction graph. vector of length 3 for three-way interaction graph. Vector should be passed in the form of c(response_var, predict_var1, predict_var2, [predict_var3]). Function should be passed as a switch function. See below for an example.}
 
 \item{estimation_method}{default to `REML`. See `nlme::lme` for other option}
 
-\item{optim_control}{default to `optim`. See `nlme::lme` for other option}
-
 \item{na.action}{default to `na.exclude`. See `nlme::lme` for other option}
 
-\item{return_result}{default to `none`. `none` return nothing. `short_summary` return a short model summary. `long_summary` return a comprehensive summary. `model` return a lme object. `plot` return the interaction plot.}
+\item{return_result}{default to `none`. `none` return nothing. `short_summary` return a short model summary. `long_summary` return the summary using the `base::summary`` function. `model` return a lme object. `plot` return the interaction plot.}
 
-\item{print_result}{default to `both`. `both` return a short_summary and plot. `short_summary` return a short model summary. `long_summary` return a comprehensive summary. `plot` return the interaction plot.}
+\item{print_result}{default to `both`. `both` return a short_summary and plot. `short_summary` return a short model summary. `long_summary` return the summary using the `base::summary`. `plot` return the interaction plot.}
+
+\item{optim_control}{default to `nlminb`. Another common option is `optim`. See `nlme::lme` for other option}
 }
 \value{
 
@@ -61,6 +61,19 @@ model_summary(data = processed_df,
              two_way_interaction_factor = c('JI_Individual', 'SES_Individual'),
              id = 'Country',
              graph_label_name = graph_label_name)
+
+         # graph_label_function should be able to return the name of the label if the variable name is passed in
+         # example of graoh_label_name function, you must load the function in the script
+         graph_label_name <- function(var_name) {
+                             var_name_processed =
+                             switch (var_name,
+                             'Variable_Name1' = 'Label_Name1',
+                             'Variable_Name2' = 'Label_Name2',
+                             'Variable_Name3' = 'Label_Name3')
+                              if (is.null(var_name_processed)) {
+                                 var_name_processed = var_name }
+                             return(var_name_processed)
+                             }
 
 
 }

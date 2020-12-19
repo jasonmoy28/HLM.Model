@@ -1,4 +1,5 @@
-#' HLM Model Summary
+#' Short summary of the HLM Model
+#'
 #'
 #' @param nlme_object lme object from `nlme::lme`
 #' @param sig_threshold default 0.05. The significant column will show `sig` in rows that are below the sig_threshold

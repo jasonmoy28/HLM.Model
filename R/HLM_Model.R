@@ -1,4 +1,5 @@
 #' HLM Model
+#'
 #' The function calls the `nlme::lme`. See `nlme::lme` for full documentation
 #'
 #' @param data dataframe
@@ -30,7 +31,7 @@ HLM_model <- function(data, response_variable,
                       three_way_interaction_factor = NULL,
                       id,
                       estimation_method = 'REML',
-                      optim_control = 'optim',
+                      opt_control = NULL,
                       na.action = na.exclude)
 {
   # Fixed factor inlcude both level factor

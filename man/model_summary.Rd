@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_summary.R
 \name{model_summary}
 \alias{model_summary}
-\title{HLM Model Summary}
+\title{Short summary of the HLM Model}
 \usage{
 model_summary(nlme_object, sig_threshold = 0.05)
 }
@@ -15,7 +15,7 @@ model_summary(nlme_object, sig_threshold = 0.05)
 a dataframe with estimate, degree of freedom, p_value, and whether that p_value is significant
 }
 \description{
-HLM Model Summary
+Short summary of the HLM Model
 }
 \examples{
 model_summary(model)

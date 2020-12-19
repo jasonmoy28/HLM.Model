@@ -2,8 +2,7 @@
 % Please edit documentation in R/HLM_Model.R
 \name{HLM_model}
 \alias{HLM_model}
-\title{HLM Model
-The function calls the `nlme::lme`. See `nlme::lme` for full documentation}
+\title{HLM Model}
 \usage{
 HLM_model(
   data,
@@ -14,7 +13,7 @@ HLM_model(
   three_way_interaction_factor = NULL,
   id,
   estimation_method = "REML",
-  optim_control = "optim",
+  opt_control = NULL,
   na.action = na.exclude
 )
 }
@@ -35,15 +34,14 @@ HLM_model(
 
 \item{estimation_method}{default to `REML`. See `nlme::lme` for other option}
 
-\item{optim_control}{default to `optim`. See `nlme::lme` for other option}
-
 \item{na.action}{default to `na.exclude`. See `nlme::lme` for other option}
+
+\item{optim_control}{default to `optim`. See `nlme::lme` for other option}
 }
 \value{
 An object of class "lme" representing the linear mixed-effects model fit.
 }
 \description{
-HLM Model
 The function calls the `nlme::lme`. See `nlme::lme` for full documentation
 }
 \examples{

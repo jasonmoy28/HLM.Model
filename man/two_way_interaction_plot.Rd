@@ -2,7 +2,7 @@
 % Please edit documentation in R/two_way_interaction_plot.R
 \name{two_way_interaction_plot}
 \alias{two_way_interaction_plot}
-\title{Two-way interaction plot}
+\title{Create a two-way interaction plot}
 \usage{
 two_way_interaction_plot(data, nlme_object, predict_var_name, graph_label_name)
 }
@@ -13,7 +13,7 @@ two_way_interaction_plot(data, nlme_object, predict_var_name, graph_label_name)
 
 \item{predict_var_name}{vector of length 2. predictive variable names}
 
-\item{graph_label_name}{vector of length 3 or function. Vector should be passed in the form of c(response_var, predict_var1, predict_var2). Function should be passed as a switch function. See `HLM.Model::graph_label_name`.}
+\item{graph_label_name}{vector of length 3 or function. Vector should be passed in the form of c(response_var, predict_var1, predict_var2). Function should be passed as a switch function that return the label based on the name passed (e.g., a switch function)}
 }
 \value{
 ggplot object. two-way interaction plot
@@ -29,6 +29,23 @@ two_way_interaction_plot(data = processed_df,
          two_way_interaction_plot(data = processed_df,
                                    predcit_var_name = c('JI_Individual','Gender_Individual'),
                                    graph_label_name = graph_label_name) # graph_label_name is a switch function, do not use parenthesis
+
+         # graph_label_function should be able to return the name of the label if the variable name is passed in
+         # example of graoh_label_name function, you must load the function in the script
+         graph_label_name <- function(var_name) {
+                             var_name_processed =
+                             switch (var_name,
+                             'Variable_Name1' = 'Label_Name1',
+                             'Variable_Name2' = 'Label_Name2',
+                             'Variable_Name3' = 'Label_Name3')
+                              if (is.null(var_name_processed)) {
+                                 var_name_processed = var_name }
+                             return(var_name_processed)
+                             }
+
+
+
+
 
 
 

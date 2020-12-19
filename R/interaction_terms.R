@@ -1,4 +1,6 @@
-#' interaction_terms
+#' HLM_Model formula interction term
+#'
+#' Essential for HLM.Model::HLM_Model
 #'
 #' @param interaction_terms vector. names of the interaction terms
 #' @return vector. The vector is essential for the lme formula used in function `HLM.Model::HLM_Model`

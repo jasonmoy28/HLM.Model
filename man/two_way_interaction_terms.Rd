@@ -2,7 +2,7 @@
 % Please edit documentation in R/interaction_terms.R
 \name{two_way_interaction_terms}
 \alias{two_way_interaction_terms}
-\title{interaction_terms}
+\title{HLM_Model formula interction term}
 \usage{
 two_way_interaction_terms(interaction_terms)
 }
@@ -13,7 +13,7 @@ two_way_interaction_terms(interaction_terms)
 vector. The vector is essential for the lme formula used in function `HLM.Model::HLM_Model`
 }
 \description{
-interaction_terms
+Essential for HLM.Model::HLM_Model
 }
 \examples{
  two_way_interaction_terms(c('Gender','Education','SES'))

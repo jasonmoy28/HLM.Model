@@ -56,7 +56,7 @@ HLM_model <- function(data, response_variable,
   fixed_factors_formula = as.formula(paste(paste(response_variable, '~'), paste(fixed_factors, collapse = '+')))
   # Created the formula for random factors
   random_factors_formula = as.formula(paste('~ 1 +', paste(random_factors, collapse = '+'), paste('|',id)))
-  ctrl = lmeControl(opt=optim_control)
+  ctrl = lmeControl(opt=opt_control)
   # Run lme model
   model = do.call("lme", list(fixed = fixed_factors_formula,
                               random = random_factors_formula,

@@ -35,17 +35,17 @@ model_summary_with_plot(
 
 \item{id}{character or vector of length 1. The nesting variable (e.g. country)}
 
-\item{graph_label_name}{vector of length 2 for two-interaction graph. vector of length 3 for three-way interaction graph. Vector should be passed in the form of c(response_var, predict_var1, predict_var2, [predict_var3]). Function should be passed as a switch function. See below for an example.}
+\item{graph_label_name}{vector or function. vector of length 2 for two-way interaction graph. vector of length 3 for three-way interaction graph. Vector should be passed in the form of c(response_var, predict_var1, predict_var2, [predict_var3]). Function should be passed as a switch function. See below for an example.}
 
-\item{estimation_method}{default to `REML`. See `nlme::lme` for other option}
+\item{estimation_method}{default to `REML`. See `nlme::lme` for other options}
 
-\item{na.action}{default to `na.exclude`. See `nlme::lme` for other option}
+\item{na.action}{default to `na.exclude`. See `nlme::lme` for other options}
 
-\item{return_result}{default to `none`. `none` return nothing. `short_summary` return a short model summary. `long_summary` return the summary using the `base::summary`` function. `model` return a lme object. `plot` return the interaction plot.}
+\item{return_result}{default to `none`. Choose from `short_summary`,`long_summary`, `model`,`plot`,`none`. `none` return nothing. `short_summary` return a short model summary. `long_summary` return the summary using the `base::summary` function. `model` return a lme object. `plot` return the interaction plot.}
 
-\item{print_result}{default to `both`. `both` return a short_summary and plot. `short_summary` return a short model summary. `long_summary` return the summary using the `base::summary`. `plot` return the interaction plot.}
+\item{print_result}{default to `both`. Choose from `both`, `long_summary`, `short_summary`, `plot`, `none`. `both` return a short_summary and plot. `short_summary` return a short model summary. `long_summary` return the summary using the base::summary. `plot` return the interaction plot.}
 
-\item{optim_control}{default to `nlminb`. Another common option is `optim`. See `nlme::lme` for other option}
+\item{optim_control}{default to `nlminb`. Another common option is `optim`. See `nlme::lme` for other options}
 }
 \value{
 
@@ -62,18 +62,18 @@ model_summary(data = processed_df,
              id = 'Country',
              graph_label_name = graph_label_name)
 
-         # graph_label_function should be able to return the name of the label if the variable name is passed in
-         # example of graoh_label_name function, you must load the function in the script
-         graph_label_name <- function(var_name) {
-                             var_name_processed =
-                             switch (var_name,
+# graph_label_function should be able to return the name of the label if the variable name is passed in
+# example of graoh_label_name function, you must load the function in the script
+graph_label_name <- function(var_name) {
+                      var_name_processed =
+                         switch (var_name,
                              'Variable_Name1' = 'Label_Name1',
                              'Variable_Name2' = 'Label_Name2',
                              'Variable_Name3' = 'Label_Name3')
-                              if (is.null(var_name_processed)) {
-                                 var_name_processed = var_name }
-                             return(var_name_processed)
-                             }
+                         if (is.null(var_name_processed)) {
+                             var_name_processed = var_name }
+                         return(var_name_processed)
+                       }
 
 
 }

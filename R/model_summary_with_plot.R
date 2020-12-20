@@ -47,6 +47,7 @@ model_summary_with_plot = function(data, response_variable,
                           level_2_factors = NULL,
                           two_way_interaction_factor = NULL,
                           three_way_interaction_factor = NULL,
+                          cateogrical_var = NULL,
                           id,
                           graph_label_name = NULL,
                           estimation_method = 'REML',
@@ -86,12 +87,14 @@ model_summary_with_plot = function(data, response_variable,
     interaction_plot = two_way_interaction_plot(data = data,
                                                 nlme_object = model,
                                                 predict_var_name = graphing_interaction_factor,
+                                                cateogrical_var = cateogrical_var,
                                                 graph_label_name = graph_label_name)
 
     } else if(!is.null(three_way_interaction_factor)){
     interaction_plot = three_way_interaction_plot(data = data,
                                                   nlme_object = model,
                                                   predict_var_name = three_way_interaction_factor,
+                                                  cateogrical_var = cateogrical_var,
                                                   graph_label_name = graph_label_name)
   } else{
     error_message = 'Error: object two_way_interaction_factor is not provided'

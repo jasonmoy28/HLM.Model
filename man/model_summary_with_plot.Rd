@@ -11,6 +11,7 @@ model_summary_with_plot(
   level_2_factors = NULL,
   two_way_interaction_factor = NULL,
   three_way_interaction_factor = NULL,
+  cateogrical_var = NULL,
   id,
   graph_label_name = NULL,
   estimation_method = "REML",

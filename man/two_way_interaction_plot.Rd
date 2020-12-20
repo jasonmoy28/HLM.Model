@@ -4,7 +4,13 @@
 \alias{two_way_interaction_plot}
 \title{Create a two-way interaction plot}
 \usage{
-two_way_interaction_plot(data, nlme_object, predict_var_name, graph_label_name)
+two_way_interaction_plot(
+  data,
+  nlme_object,
+  predict_var_name,
+  graph_label_name = NULL,
+  cateogrical_var = NULL
+)
 }
 \arguments{
 \item{data}{dataframe.}

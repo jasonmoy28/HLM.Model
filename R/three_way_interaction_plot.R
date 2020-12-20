@@ -6,6 +6,7 @@
 #' @param nlme_object lme object from `nlme::lme`
 #' @param predict_var_name vector of length 3. the variables' name for the two-way interaction plot
 #' @param graph_label_name vector of length 3 or function. Vector should be passed in the form of c(response_var, predict_var1, predict_var2, predict_var3). Function should be passed as a switch function that return the label based on the name passed (e.g., a switch function)
+#' @param cateogrical_var list. use the form list(var_name1 = c(upper_bound1, lower_bound1), [var_name2 = c(upper_bound2, lower_bound2])
 #'
 #' @return ggplot object. three-way interaction plot
 #'
@@ -34,11 +35,12 @@
 #'                          return(var_name_processed)
 #'                        }
 #'
-#'
-#'
-#'
-#'
-three_way_interaction_plot = function(data, nlme_object, predict_var_name, graph_label_name){
+
+three_way_interaction_plot = function(data,
+                                      nlme_object,
+                                      predict_var_name,
+                                      cateogrical_var = NULL,
+                                      graph_label_name = NULL){
   # Convert to numeric if convertiable
   datatype = as.vector(sapply(data, class))
   if(all(datatype == 'numeric'| datatype == 'factor' | datatype == 'integer')){
@@ -60,9 +62,16 @@ three_way_interaction_plot = function(data, nlme_object, predict_var_name, graph
 
   lower_df = data %>%
     summarise_all(.funs = function(.){mean(.,na.rm = T) - 1*sd(.,na.rm = T)})
+
+  # Specify the categorical variable upper and lower bound directly
+  if (!is.null(cateogrical_var)) {
+    for (name in names(cateogrical_var)) {
+      upper_df[name] = cateogrical_var[[name]][1]
+      lower_df[name] = cateogrical_var[[name]][2]
+    }
+  }
   # Get the variable names of the model
   model_var_name = names(nlme_object$fixDF$terms[-1])
-
   # Update values in the new_data_df to the values in predicted_df & get the predicted value
   # Plot 1
   upper_upper_upper_df = mean_df
@@ -84,7 +93,7 @@ three_way_interaction_plot = function(data, nlme_object, predict_var_name, graph
   lower_lower_upper_df = mean_df
   lower_lower_upper_df[predict_var1] = lower_df[predict_var1]
   lower_lower_upper_df[predict_var2] = lower_df[predict_var2]
-  lower_lower_upper_df[predict_var3] = lower_df[predict_var3]
+  lower_lower_upper_df[predict_var3] = upper_df[predict_var3]
 
   upper_upper_upper_predicted_value = predict(nlme_object,newdata = upper_upper_upper_df,level = 0)
   upper_lower_upper_predicted_value = predict(nlme_object,newdata = upper_lower_upper_df,level = 0)
@@ -159,7 +168,7 @@ three_way_interaction_plot = function(data, nlme_object, predict_var_name, graph
     response_var_plot_label = response_var
     predict_var1_plot_label = predict_var1
     predict_var2_plot_label = predict_var2
-    predict_var2_plot_label = predict_var3}
+    predict_var3_plot_label = predict_var3}
 
   final_df = final_df %>%
     mutate(var3_category = str_c(var3_category, ' ', predict_var3_plot_label))
@@ -177,3 +186,5 @@ three_way_interaction_plot = function(data, nlme_object, predict_var_name, graph
 
   return(plot)
 }
+
+

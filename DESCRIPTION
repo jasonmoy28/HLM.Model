@@ -12,4 +12,5 @@ RoxygenNote: 7.1.1
 Depends: 
     ggplot2,
     dplyr,
-    nlme
+    nlme,
+    stringr

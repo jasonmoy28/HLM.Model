@@ -8,7 +8,8 @@ three_way_interaction_plot(
   data,
   nlme_object,
   predict_var_name,
-  graph_label_name
+  cateogrical_var = NULL,
+  graph_label_name = NULL
 )
 }
 \arguments{
@@ -17,6 +18,8 @@ three_way_interaction_plot(
 \item{nlme_object}{lme object from `nlme::lme`}
 
 \item{predict_var_name}{vector of length 3. the variables' name for the two-way interaction plot}
+
+\item{cateogrical_var}{list. use the form list(var_name1 = c(upper_bound1, lower_bound1), [var_name2 = c(upper_bound2, lower_bound2])}
 
 \item{graph_label_name}{vector of length 3 or function. Vector should be passed in the form of c(response_var, predict_var1, predict_var2, predict_var3). Function should be passed as a switch function that return the label based on the name passed (e.g., a switch function)}
 }
@@ -48,9 +51,5 @@ graph_label_name <- function(var_name) {
                              var_name_processed = var_name }
                          return(var_name_processed)
                        }
-
-
-
-
 
 }

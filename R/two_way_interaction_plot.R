@@ -34,7 +34,11 @@
 #'
 #'
 #'
-two_way_interaction_plot = function(data, nlme_object, predict_var_name, graph_label_name) {
+two_way_interaction_plot = function(data,
+                                    nlme_object,
+                                    predict_var_name,
+                                    graph_label_name = NULL,
+                                    cateogrical_var = NULL) {
 
   datatype = as.vector(sapply(data, class))
   if(all(datatype == 'numeric'| datatype == 'factor' | datatype == 'integer')){
@@ -54,6 +58,14 @@ two_way_interaction_plot = function(data, nlme_object, predict_var_name, graph_l
 
   lower_df = data %>%
     summarise_all(.funs = function(.){mean(.,na.rm = T) - 1*sd(.,na.rm = T)})
+
+  # Specify the categorical variable upper and lower bound directly
+  if (!is.null(cateogrical_var)) {
+    for (name in names(cateogrical_var)) {
+      upper_df[name] = cateogrical_var[[name]][1]
+      lower_df[name] = cateogrical_var[[name]][2]
+    }
+  }
   # Get the variable names of the model
   model_var_name = names(nlme_object$fixDF$terms[-1])
 

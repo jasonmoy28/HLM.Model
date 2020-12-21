@@ -13,7 +13,7 @@ HLM_model(
   three_way_interaction_factor = NULL,
   id,
   estimation_method = "REML",
-  opt_control = NULL,
+  opt_control = "optim",
   na.action = na.exclude
 )
 }
@@ -32,11 +32,11 @@ HLM_model(
 
 \item{id}{character or vector of length 1. The nesting variable (e.g. country)}
 
-\item{estimation_method}{default to `REML`. See `nlme::lme` for other option}
+\item{estimation_method}{character. default to `REML`. See `nlme::lme` for other option}
+
+\item{opt_control}{character. default to `optim`. Be aware that nlme::lme default to nlminb. See `nlme::lme` for other option}
 
 \item{na.action}{default to `na.exclude`. See `nlme::lme` for other option}
-
-\item{optim_control}{default to `optim`. See `nlme::lme` for other option}
 }
 \value{
 An object of class "lme" representing the linear mixed-effects model fit.

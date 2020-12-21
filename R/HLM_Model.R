@@ -9,9 +9,9 @@
 #' @param two_way_interaction_factor vector of length more than 2. Default to `null``
 #' @param three_way_interaction_factor vector of length 3. Two-way interaction factors are included
 #' @param id character or vector of length 1. The nesting variable (e.g. country)
-#' @param estimation_method default to `REML`. See `nlme::lme` for other option
-#' @param optim_control default to `optim`. See `nlme::lme` for other option
+#' @param estimation_method character. default to `REML`. See `nlme::lme` for other option
 #' @param na.action default to `na.exclude`. See `nlme::lme` for other option
+#' @param opt_control character. default to `optim`. Be aware that nlme::lme default to nlminb. See `nlme::lme` for other option
 #'
 #' @return An object of class "lme" representing the linear mixed-effects model fit.
 #' @export
@@ -31,7 +31,7 @@ HLM_model <- function(data, response_variable,
                       three_way_interaction_factor = NULL,
                       id,
                       estimation_method = 'REML',
-                      opt_control = NULL,
+                      opt_control = 'optim',
                       na.action = na.exclude)
 {
   # Fixed factor inlcude both level factor

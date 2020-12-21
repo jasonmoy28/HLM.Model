@@ -2,21 +2,21 @@
 #'
 #' A integrated function that combines all of the functionality of the pacakge.
 #'
-#' @param data dataframe
-#' @param response_variable character or vector of length 1
-#' @param level_1_factors vector. Lower level variables (e.g., individual-level)
-#' @param level_2_factors vector. Higher level variables (e.g., country-level)
-#' @param two_way_interaction_factor vector of length more than 2. Default to `null`. vector in the form of c(predict_var1, predict_var2)
-#' @param three_way_interaction_factor vector of length 3.  Default to `null`. vector in the form of c(predict_var1, predict_var2,predict_var3)
-#' @param id character or vector of length 1. The nesting variable (e.g. country)
-#' @param graph_label_name vector or function. vector of length 2 for two-way interaction graph. vector of length 3 for three-way interaction graph. Vector should be passed in the form of c(response_var, predict_var1, predict_var2, [predict_var3]). Function should be passed as a switch function. See below for an example.
-#' @param estimation_method character. default to `REML`. See `nlme::lme` for other options
-#' @param return_result character. default to `none`. Choose from `short_summary`,`long_summary`, `model`,`plot`,`none`. `none` return nothing. `short_summary` return a short model summary. `long_summary` return the summary using the `base::summary` function. `model` return a lme object. `plot` return the interaction plot.
-#' @param print_result  character. default to `both`. Choose from `both`, `long_summary`, `short_summary`, `plot`, `none`. `both` return a short_summary and plot. `short_summary` return a short model summary. `long_summary` return the summary using the base::summary. `plot` return the interaction plot.
-#' @param na.action default to `na.exclude`. See `nlme::lme` for other options
-#' @param cateogrical_var vector.
-#' @param opt_control character. default to `optim`. Be aware that `nlme::lme` default to nlminb. See `nlme::lme` for other option
-#' @param model_performance vector. default to c('R2_fixed_effect'). `R2_full_model` for conditional R^2. `R2_fixed_effect` for marginal R^2. `icc` for intraclass correlation coefficient. Used the `performance::r2()` and `performance::icc()` for model performance
+#' @param data required dataframe
+#' @param response_variable required character or vector of length 1
+#' @param level_1_factors required vector. Lower level variables (e.g., individual-level)
+#' @param level_2_factors optional vector. Higher level variables (e.g., country-level)
+#' @param two_way_interaction_factor optional vector of length more than 2. Default to `null`. vector in the form of c(predict_var1, predict_var2)
+#' @param three_way_interaction_factor optional vector of length 3.  Default to `null`. vector in the form of c(predict_var1, predict_var2,predict_var3)
+#' @param id required character or vector of length 1. The nesting variable (e.g. country)
+#' @param graph_label_name optional vector or function. vector of length 2 for two-way interaction graph. vector of length 3 for three-way interaction graph. Vector should be passed in the form of c(response_var, predict_var1, predict_var2, [predict_var3]). Function should be passed as a switch function. See below for an example.
+#' @param estimation_method optional character. See `nlme::lme` for other options
+#' @param return_result optional character. Choose from `short_summary`,`long_summary`, `model`,`plot`,`none`. `none` return nothing. `short_summary` return a short model summary. `long_summary` return the summary using the `base::summary` function. `model` return a lme object. `plot` return the interaction plot.
+#' @param print_result  optional vector. Choose from `both`, `long_summary`, `short_summary`, `plot`, `none`. `short_summary` return a short model summary. `long_summary` return the summary using the base::summary. `plot` return the interaction plot.
+#' @param na.action required default to `na.exclude`. See `nlme::lme` for other options
+#' @param cateogrical_var optional vector.
+#' @param opt_control optional character. default to `optim`. Be aware that `nlme::lme` default to nlminb. See `nlme::lme` for other option
+#' @param model_performance optional vector. default to c('R2_fixed_effect','R2_full_model'). `R2_full_model` for conditional R^2. `R2_fixed_effect` for marginal R^2. `icc` for intraclass correlation coefficient. Used the `performance::r2()` and `performance::icc()` for model performance
 #'
 #' @return
 #' @export
@@ -57,7 +57,7 @@ model_summary_with_plot = function(data, response_variable,
                           na.action = na.exclude,
                           model_performance = c('R2_fixed_effect','R2_full_model'),
                           return_result = 'none',
-                          print_result = 'both') {
+                          print_result = c('short_summary','plot')) {
   # Required library
 
   # All data must be dummy-code or factorized before passing into the function
@@ -106,41 +106,39 @@ model_summary_with_plot = function(data, response_variable,
   model_summary_df = model_summary(nlme_object = model,model_performance = model_performance)
 
   # Check print result
-  if (print_result == 'both') {
-    print(model_summary_df)
-    try(print(interaction_plot))
-
-  } else if(print_result == 'short_summary'){
+  if (any(print_result %in% 'short_summary')) {
     print(model_summary_df)
 
-  } else if(print_result == 'plot'){
-    try(print(interaction_plot))
-
-  } else if(print_result == 'long_summary'){
-    print(summary(model))
-
-  } else{
-    return('Error: Print result must be set to both, dataframe, plot, or none. Print result cannot set to plot if interaction_plot is not provided. ')
   }
+
+  if(any(print_result %in% 'long_summary')){
+    print(summary(model))
+  }
+
+  if(any(print_result %in% 'plot')){
+    try(print(interaction_plot))
+  }
+
 
 
   # Check return result
   if(return_result == 'plot'){
     try(print(interaction_plot))
 
-  } else if (return_result == 'short_summary ') {
-    return(model_summary_df)
+    } else if (return_result == 'short_summary ') {
+       return(model_summary_df)
 
-  } else if (return_result == 'none'){
-    return_result = 'none' # doing something so it won't return null
+      } else if(return_result == 'model'){
+         return(model)
 
-  } else if(return_result == 'model'){
-    return(model)
+        } else if(return_result == 'long_summary'){
+          return(summary(model))
 
-  } else if(return_result == 'long_summary'){
-    return(summary(model))
+          } else if (return_result == 'none'){
+            return_result = 'none' # doing something so it won't return null
+
+            } else {
+              return('Error: return_result must be set to short_summary, long_summary, plot, model, or none')
+              }
+
   }
-  else {
-    return('Error: return_result must be set to short_summary, long_summary, plot, model, or none')
-  }
-}

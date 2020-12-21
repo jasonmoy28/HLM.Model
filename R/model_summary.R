@@ -3,7 +3,7 @@
 #'
 #' @param nlme_object lme object from `nlme::lme`
 #' @param sig_threshold default 0.05. The significant column will show `sig` in rows that are below the sig_threshold
-#' @param model_performance vector. default to c('R2_fixed_effect'). `R2_full_model` for conditional R^2. `R2_fixed_effect` for marginal R^2. `icc` for intraclass correlation coefficient. Used the `performance::r2()` and `performance::icc()` for model performance
+#' @param model_performance vector. default to c('R2_fixed_effect','R2_full_model'). `R2_full_model` for conditional R^2. `R2_fixed_effect` for marginal R^2. `icc` for intraclass correlation coefficient. Used the `performance::r2()` and `performance::icc()` for model performance
 #'
 #' @return a dataframe with estimate, degree of freedom, p_value, and whether that p_value is significant
 #' @export
@@ -13,7 +13,7 @@
 #'
 model_summary <- function(nlme_object,
                           sig_threshold = 0.05,
-                          model_performance = 'R2_fixed_effect') {
+                          model_performance = c('R2_fixed_effect','R2_full_model')) {
 
   summary =  as.data.frame(summary(nlme_object)[20])
 
@@ -40,7 +40,7 @@ model_summary <- function(nlme_object,
   }
   if (any(model_performance %in% 'icc')) {
     icc = as.numeric(performance::icc(nlme_object)[1])
-    icc_df = data.frame(variable = 'ICC', estimate= round(icc,3), DF = NA, p_value = NA,significant = NA)
+    icc_df = data.frame(variable = 'ICC_Adjusted', estimate= round(icc,3), DF = NA, p_value = NA,significant = NA)
   }
   return_df = rbind(return_df,R2_conditional_df,R2_marginal_df,
                     icc_df)

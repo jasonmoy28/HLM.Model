@@ -15,8 +15,9 @@ model_summary_with_plot(
   id,
   graph_label_name = NULL,
   estimation_method = "REML",
-  opt_control = NULL,
+  opt_control = "optim",
   na.action = na.exclude,
+  model_performance = c("R2_fixed_effect", "R2_full_model"),
   return_result = "none",
   print_result = "both"
 )
@@ -34,19 +35,23 @@ model_summary_with_plot(
 
 \item{three_way_interaction_factor}{vector of length 3.  Default to `null`. vector in the form of c(predict_var1, predict_var2,predict_var3)}
 
+\item{cateogrical_var}{vector.}
+
 \item{id}{character or vector of length 1. The nesting variable (e.g. country)}
 
 \item{graph_label_name}{vector or function. vector of length 2 for two-way interaction graph. vector of length 3 for three-way interaction graph. Vector should be passed in the form of c(response_var, predict_var1, predict_var2, [predict_var3]). Function should be passed as a switch function. See below for an example.}
 
-\item{estimation_method}{default to `REML`. See `nlme::lme` for other options}
+\item{estimation_method}{character. default to `REML`. See `nlme::lme` for other options}
+
+\item{opt_control}{character. default to `optim`. Be aware that `nlme::lme` default to nlminb. See `nlme::lme` for other option}
 
 \item{na.action}{default to `na.exclude`. See `nlme::lme` for other options}
 
-\item{return_result}{default to `none`. Choose from `short_summary`,`long_summary`, `model`,`plot`,`none`. `none` return nothing. `short_summary` return a short model summary. `long_summary` return the summary using the `base::summary` function. `model` return a lme object. `plot` return the interaction plot.}
+\item{model_performance}{vector. default to c('R2_fixed_effect'). `R2_full_model` for conditional R^2. `R2_fixed_effect` for marginal R^2. `icc` for intraclass correlation coefficient. Used the `performance::r2()` and `performance::icc()` for model performance}
 
-\item{print_result}{default to `both`. Choose from `both`, `long_summary`, `short_summary`, `plot`, `none`. `both` return a short_summary and plot. `short_summary` return a short model summary. `long_summary` return the summary using the base::summary. `plot` return the interaction plot.}
+\item{return_result}{character. default to `none`. Choose from `short_summary`,`long_summary`, `model`,`plot`,`none`. `none` return nothing. `short_summary` return a short model summary. `long_summary` return the summary using the `base::summary` function. `model` return a lme object. `plot` return the interaction plot.}
 
-\item{optim_control}{default to `nlminb`. Another common option is `optim`. See `nlme::lme` for other options}
+\item{print_result}{character. default to `both`. Choose from `both`, `long_summary`, `short_summary`, `plot`, `none`. `both` return a short_summary and plot. `short_summary` return a short model summary. `long_summary` return the summary using the base::summary. `plot` return the interaction plot.}
 }
 \value{
 

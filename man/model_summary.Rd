@@ -4,12 +4,18 @@
 \alias{model_summary}
 \title{Short summary of the HLM Model}
 \usage{
-model_summary(nlme_object, sig_threshold = 0.05)
+model_summary(
+  nlme_object,
+  sig_threshold = 0.05,
+  model_performance = "R2_fixed_effect"
+)
 }
 \arguments{
 \item{nlme_object}{lme object from `nlme::lme`}
 
 \item{sig_threshold}{default 0.05. The significant column will show `sig` in rows that are below the sig_threshold}
+
+\item{model_performance}{vector. default to c('R2_fixed_effect'). `R2_full_model` for conditional R^2. `R2_fixed_effect` for marginal R^2. `icc` for intraclass correlation coefficient. Used the `performance::r2()` and `performance::icc()` for model performance}
 }
 \value{
 a dataframe with estimate, degree of freedom, p_value, and whether that p_value is significant

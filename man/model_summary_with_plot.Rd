@@ -49,12 +49,12 @@ model_summary_with_plot(
 
 \item{model_performance}{optional vector. default to c('R2_fixed_effect','R2_full_model'). `R2_full_model` for conditional R^2. `R2_fixed_effect` for marginal R^2. `icc` for intraclass correlation coefficient. Used the `performance::r2()` and `performance::icc()` for model performance}
 
-\item{return_result}{optional character. Choose from `short_summary`,`long_summary`, `model`,`plot`,`none`. `none` return nothing. `short_summary` return a short model summary. `long_summary` return the summary using the `base::summary` function. `model` return a lme object. `plot` return the interaction plot.}
+\item{return_result}{optional vector. Choose from `short_summary`,`long_summary`, `model`,`plot`,`none`. `none` return nothing. `short_summary` return a short model summary. `long_summary` return the summary using the `base::summary` function. `model` return a lme object. `plot` return the interaction plot.}
 
 \item{print_result}{optional vector. Choose from `both`, `long_summary`, `short_summary`, `plot`, `none`. `short_summary` return a short model summary. `long_summary` return the summary using the base::summary. `plot` return the interaction plot.}
 }
 \value{
-
+return a list of all requested items in the order of model, short_summary, long_summary, plot
 }
 \description{
 A integrated function that combines all of the functionality of the pacakge.

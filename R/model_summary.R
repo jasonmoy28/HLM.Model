@@ -31,11 +31,11 @@ model_summary <- function(nlme_object,
   icc_df = as.data.frame(NULL,NULL,NULL,NULL,NULL)
 
   if (any(model_performance %in% 'R2_full_model')) {
-    R2_conditional = as.numeric(performance::r2(nlme_object)[1]$R2_conditional)
+    R2_conditional = as.numeric(performance::r2(nlme_object)[1][['R2_conditional']])
     R2_conditional_df = data.frame(variable = 'R^2_full_model', estimate= round(R2_conditional,3), DF = NA, p_value = NA,significant = NA)
   }
   if (any(model_performance %in% 'R2_fixed_effect')) {
-    R2_marginal = as.numeric(performance::r2(nlme_object)[2]$R2_marginal)
+    R2_marginal = as.numeric(performance::r2(nlme_object)[2][['R2_marginal']])
     R2_marginal_df = data.frame(variable = 'R^2_fixed_effect', estimate= round(R2_marginal,3), DF = NA, p_value = NA,significant = NA)
   }
   if (any(model_performance %in% 'icc')) {

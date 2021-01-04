@@ -57,7 +57,7 @@ model_summary_with_plot = function(data, response_variable,
                           opt_control = 'optim',
                           na.action = na.exclude,
                           model_performance = c('R2_fixed_effect','R2_full_model'),
-                          return_result = 'none',
+                          return_result = NULL,
                           print_result = c('short_summary','plot')) {
   # Required library
 
@@ -126,27 +126,26 @@ model_summary_with_plot = function(data, response_variable,
 
 
   # Check return result
-  if (any(return_result == 'none')) {
-    return()
+  if (length(return_result) != 0) {
+    if(any(return_result %in% 'plot')) {
+      return_plot = interaction_plot
+    } else{return_plot = NULL}
+
+    if (any(return_result %in% 'short_summary')) {
+      return_short_summary = model_summary_df
+    } else{return_short_summary = NULL}
+
+    if(any(return_result %in% 'model')) {
+      return_model = model
+    } else{return_model = NULL}
+
+    if(any(return_result %in% 'long_summary')) {
+      return_long_summary = summary(model)
+    } else{return_long_summary = NULL}
+
+    return_list = list(return_model,return_short_summary,return_long_summary,return_plot)
+    return_list = return_list[!sapply(return_list,is.null)]
+    return(return_list)
   }
 
-  if(any(return_result %in% 'plot')) {
-    return_plot = interaction_plot
-  } else{return_plot = NULL}
-
-  if (any(return_result %in% 'short_summary')) {
-    return_short_summary = model_summary_df
-  } else{return_short_summary = NULL}
-
-  if(any(return_result %in% 'model')) {
-    return_model = model
-  } else{return_model = NULL}
-
-  if(any(return_result %in% 'long_summary')) {
-    return_long_summary = summary(model)
-  } else{return_long_summary = NULL}
-
-  return_list = list(return_model,return_short_summary,return_long_summary,return_plot)
-  return_list = return_list[!sapply(return_list,is.null)]
-  return(return_list)
   }

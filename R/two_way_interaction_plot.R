@@ -123,14 +123,14 @@ two_way_interaction_plot = function(data,
 
 
   plot = final_df %>%
-    ggplot(aes(y = value, x = var1_category, color = var2_category)) +
-    geom_point() +
-    geom_line(aes(group = var2_category)) +
+    ggplot(aes(y = value, x = var1_category, group = var2_category)) +
+    geom_point(aes(color = var2_category)) +
+    geom_line(aes(color = var2_category)) +
     labs(y = response_var_plot_label,
          x = predict_var1_plot_label,
          color = predict_var2_plot_label) +
     theme_bw() +
-    ylim(-1,1)
+    ylim(floor(min(final_df$value)) - 1, floor(max(final_df$value)) + 1)
   return(plot)
 
 }

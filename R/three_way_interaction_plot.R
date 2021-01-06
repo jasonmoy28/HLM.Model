@@ -182,7 +182,7 @@ three_way_interaction_plot = function(data,
          color = predict_var2_plot_label) +
     facet_wrap(~var3_category) +
     theme_bw() +
-    ylim(-1,1)
+    ylim(floor(min(final_df$value)) - 1, floor(max(final_df$value)) + 1)
 
   return(plot)
 }

@@ -1,11 +1,13 @@
 #' Create a two-way interaction plot
 #'
 #' This will create a three-way interaction plot. It uses the predict function on the lme object to get the values of the independent variable using the values of the independent variable that is 1 standard deviation above and below the mean.
+#'
 #' @param data dataframe.
 #' @param nlme_object lme object from `nlme::lme`
 #' @param predict_var_name vector of length 2. predictive variable names
 #' @param graph_label_name vector of length 3 or function. Vector should be passed in the form of c(response_var, predict_var1, predict_var2). Function should be passed as a switch function that return the label based on the name passed (e.g., a switch function)
-#'
+#' @param cateogrical_var list. use the form list(var_name1 = c(upper_bound1, lower_bound1), [var_name2 = c(upper_bound2, lower_bound2])
+#' @param y_lim vector of length 2. c(lower_limit, upper_limit)
 #'
 #' @return ggplot object. two-way interaction plot
 #' @export
@@ -38,7 +40,8 @@ two_way_interaction_plot = function(data,
                                     nlme_object,
                                     predict_var_name,
                                     graph_label_name = NULL,
-                                    cateogrical_var = NULL) {
+                                    cateogrical_var = NULL,
+                                    y_lim = NULL) {
 
   datatype = as.vector(sapply(data, class))
   if(all(datatype == 'numeric'| datatype == 'factor' | datatype == 'integer')){
@@ -121,16 +124,22 @@ two_way_interaction_plot = function(data,
     predict_var2_plot_label = predict_var2}
 
 
+  if (is.null(y_lim)) {
+    y_lim = c(floor(min(final_df$value)) - 0.5,ceiling(max(final_df$value)) + 0.5)
+  }
 
   plot = final_df %>%
     ggplot(aes(y = value, x = var1_category, group = var2_category)) +
-    geom_point(aes(color = var2_category)) +
-    geom_line(aes(color = var2_category)) +
+    geom_point() +
+    geom_line(aes(linetype = var2_category)) +
     labs(y = response_var_plot_label,
          x = predict_var1_plot_label,
-         color = predict_var2_plot_label) +
+         linetype = predict_var2_plot_label) +
+    scale_linetype_discrete(labels = c("High", "Low")) +
     theme_bw() +
-    ylim(floor(min(final_df$value)) - 1, floor(max(final_df$value)) + 1)
+    ylim(y_lim[1],y_lim[2])
+
+
   return(plot)
 
 }

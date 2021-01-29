@@ -7,6 +7,7 @@
 #' @param predict_var_name vector of length 3. the variables' name for the two-way interaction plot
 #' @param graph_label_name vector of length 3 or function. Vector should be passed in the form of c(response_var, predict_var1, predict_var2, predict_var3). Function should be passed as a switch function that return the label based on the name passed (e.g., a switch function)
 #' @param cateogrical_var list. use the form list(var_name1 = c(upper_bound1, lower_bound1), [var_name2 = c(upper_bound2, lower_bound2])
+#' @param y_lim
 #'
 #' @return ggplot object. three-way interaction plot
 #'
@@ -40,7 +41,8 @@ three_way_interaction_plot = function(data,
                                       nlme_object,
                                       predict_var_name,
                                       cateogrical_var = NULL,
-                                      graph_label_name = NULL){
+                                      graph_label_name = NULL,
+                                      y_lim = NULL){
   # Convert to numeric if convertiable
   datatype = as.vector(sapply(data, class))
   if(all(datatype == 'numeric'| datatype == 'factor' | datatype == 'integer')){
@@ -173,16 +175,22 @@ three_way_interaction_plot = function(data,
   final_df = final_df %>%
     mutate(var3_category = str_c(var3_category, ' ', predict_var3_plot_label))
 
+  # Set auto ylim
+  if (is.null(y_lim)) {
+    y_lim = c(floor(min(final_df$value)) - 0.5,ceiling(max(final_df$value)) + 0.5)
+  }
+
   plot = final_df %>%
-    ggplot(aes(y = value, x = var1_category, color = var2_category)) +
+    ggplot(aes(y = value, x = var1_category, group = var2_category)) +
     geom_point() +
-    geom_line(aes(group = var2_category)) +
-    labs(y = "Job Satisfaction",
+    geom_line(aes(linetype = var2_category)) +
+    labs(y = response_var_plot_label,
          x = predict_var1_plot_label,
-         color = predict_var2_plot_label) +
+         linetype = predict_var2_plot_label) +
+    scale_linetype_discrete(labels = c("High", "Low")) +
     facet_wrap(~var3_category) +
     theme_bw() +
-    ylim(floor(min(final_df$value)) - 1, floor(max(final_df$value)) + 1)
+    ylim(y_lim[1],y_lim[2])
 
   return(plot)
 }

@@ -17,6 +17,7 @@
 #' @param cateogrical_var optional vector.
 #' @param opt_control optional character. default to `optim`. Be aware that `nlme::lme` default to nlminb. See `nlme::lme` for other option
 #' @param model_performance optional vector. default to c('R2_fixed_effect','R2_full_model'). `R2_full_model` for conditional R^2. `R2_fixed_effect` for marginal R^2. `icc` for intraclass correlation coefficient. Used the `performance::r2()` and `performance::icc()` for model performance
+#' @param y_lim vector of length 2. c(lower_limit, upper_limit)
 #'
 #' @return
 #' return a list of all requested items in the order of model, short_summary, long_summary, plot
@@ -58,7 +59,8 @@ model_summary_with_plot = function(data, response_variable,
                           na.action = na.exclude,
                           model_performance = c('R2_fixed_effect','R2_full_model'),
                           return_result = NULL,
-                          print_result = c('short_summary','plot')) {
+                          print_result = c('short_summary','plot'),
+                          y_lim = NULL) {
   # Required library
 
   # All data must be dummy-code or factorized before passing into the function
@@ -92,14 +94,16 @@ model_summary_with_plot = function(data, response_variable,
                                                 nlme_object = model,
                                                 predict_var_name = graphing_interaction_factor,
                                                 cateogrical_var = cateogrical_var,
-                                                graph_label_name = graph_label_name)
+                                                graph_label_name = graph_label_name,
+                                                y_lim = y_lim)
 
     } else if (!is.null(three_way_interaction_factor) & (any(print_result %in% 'plot') | any(return_result %in% 'plot'))) {
     interaction_plot = three_way_interaction_plot(data = data,
                                                   nlme_object = model,
                                                   predict_var_name = three_way_interaction_factor,
                                                   cateogrical_var = cateogrical_var,
-                                                  graph_label_name = graph_label_name)
+                                                  graph_label_name = graph_label_name,
+                                                  y_lim = y_lim)
     } else{
       interaction_plot = NULL
     }

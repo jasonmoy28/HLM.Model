@@ -23,7 +23,9 @@ model_summary <- function(nlme_object,
     mutate(estimate = round(tTable.Value,3)) %>%
     rename(DF = tTable.DF) %>%
     mutate(p_value = round(tTable.p.value, 5)) %>%
-    mutate(significant = if_else(p_value < sig_threshold, 'sig.', '')) %>%
+    mutate(significant = case_when(p_value <= 0.001 ~ '***',
+                                   p_value <= 0.01 & p_value > 0.001 ~ '**',
+                                   p_value < 0.05 & p_value > 0.01 ~ '*')) %>%
     select(variable,estimate,DF, p_value,significant)
 
   R2_conditional_df = as.data.frame(NULL,NULL,NULL,NULL,NULL)

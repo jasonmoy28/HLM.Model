@@ -22,7 +22,7 @@ model_summary <- function(nlme_object,
     select(variable,tTable.Value,tTable.DF,tTable.p.value) %>%
     mutate(estimate = round(tTable.Value,3)) %>%
     rename(DF = tTable.DF) %>%
-    mutate(p_value = round(tTable.p.value, 5)) %>%
+    mutate(p_value = round(tTable.p.value, 3)) %>%
     mutate(significant = case_when(p_value <= 0.001 ~ '***',
                                    p_value <= 0.01 & p_value > 0.001 ~ '**',
                                    p_value < 0.05 & p_value > 0.01 ~ '*')) %>%

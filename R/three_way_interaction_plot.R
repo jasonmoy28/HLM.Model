@@ -42,7 +42,9 @@ three_way_interaction_plot = function(data,
                                       predict_var_name,
                                       cateogrical_var = NULL,
                                       graph_label_name = NULL,
-                                      y_lim = NULL){
+                                      y_lim = NULL,
+                                      debug = F,
+                                      plot_color = F){
   # Convert to numeric if convertiable
   datatype = as.vector(sapply(data, class))
   if(all(datatype == 'numeric'| datatype == 'factor' | datatype == 'integer')){
@@ -128,21 +130,6 @@ three_way_interaction_plot = function(data,
   lower_upper_lower_predicted_value = predict(nlme_object,newdata = lower_upper_lower_df,level = 0)
   lower_lower_lower_predicted_value = predict(nlme_object,newdata = lower_lower_lower_df,level = 0)
 
-  final_df = data.frame(
-    value = c(
-      upper_upper_upper_predicted_value,
-      upper_lower_upper_predicted_value,
-      lower_upper_upper_predicted_value,
-      lower_lower_upper_predicted_value,
-
-      upper_upper_lower_predicted_value,
-      upper_lower_lower_predicted_value,
-      lower_upper_lower_predicted_value,
-      lower_lower_lower_predicted_value),
-    var1_category = factor(c('High','High','Low','Low','High','High','Low','Low'),levels = c('Low', 'High')),
-    var2_category = c('High','Low','High','Low','High','Low','High','Low'),
-    var3_category = c('High','High','High','High','Low','Low','Low','Low'))
-
   # Get the correct label for the plot
   if (!is.null(graph_label_name)) {
     # If a vector of string is passed as argument, slice the vector
@@ -172,25 +159,58 @@ three_way_interaction_plot = function(data,
     predict_var2_plot_label = predict_var2
     predict_var3_plot_label = predict_var3}
 
-  final_df = final_df %>%
-    mutate(var3_category = str_c(var3_category, ' ', predict_var3_plot_label))
+  high = str_c('High',' ', predict_var3_plot_label)
+  low = str_c('Low',' ', predict_var3_plot_label)
 
+  final_df = data.frame(
+    value = c(
+      upper_upper_upper_predicted_value,
+      upper_lower_upper_predicted_value,
+      lower_upper_upper_predicted_value,
+      lower_lower_upper_predicted_value,
+
+      upper_upper_lower_predicted_value,
+      upper_lower_lower_predicted_value,
+      lower_upper_lower_predicted_value,
+      lower_lower_lower_predicted_value),
+
+    var1_category = factor(c('High','High','Low','Low','High','High','Low','Low'),levels = c('Low', 'High')),
+    var2_category = factor(c('High','Low','High','Low','High','Low','High','Low'), levels = c('Low','High')),
+    var3_category = factor(c(high,high,high,high,low,low,low,low), levels = c(low,high)))
+
+  if (debug) {
+    return(final_df)
+  }
   # Set auto ylim
   if (is.null(y_lim)) {
     y_lim = c(floor(min(final_df$value)) - 0.5,ceiling(max(final_df$value)) + 0.5)
   }
 
-  plot = final_df %>%
-    ggplot(aes(y = value, x = var1_category, group = var2_category)) +
-    geom_point() +
-    geom_line(aes(linetype = var2_category)) +
-    labs(y = response_var_plot_label,
-         x = predict_var1_plot_label,
-         linetype = predict_var2_plot_label) +
-    scale_linetype_discrete(labels = c("High", "Low")) +
-    facet_wrap(~var3_category) +
-    theme_bw() +
-    ylim(y_lim[1],y_lim[2])
+
+  if (plot_color) {
+    plot = final_df %>%
+      ggplot(aes(y = value, x = var1_category, color = var2_category)) +
+      geom_point() +
+      geom_line(aes(group = var2_category)) +
+      labs(y = response_var_plot_label,
+           x = predict_var1_plot_label,
+           color = predict_var2_plot_label) +
+      facet_wrap(~var3_category) +
+      papaja::theme_apa() +
+      ylim(y_lim[1],y_lim[2])
+
+  } else{
+    plot = final_df %>%
+      ggplot(aes(y = value, x = var1_category, group = var2_category)) +
+      geom_point() +
+      geom_line(aes(linetype = var2_category)) +
+      labs(y = response_var_plot_label,
+           x = predict_var1_plot_label,
+           linetype = predict_var2_plot_label) +
+      facet_wrap(~var3_category) +
+      papaja::theme_apa() +
+      ylim(y_lim[1],y_lim[2])
+    }
 
   return(plot)
 }

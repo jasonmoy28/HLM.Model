@@ -41,7 +41,9 @@ two_way_interaction_plot = function(data,
                                     predict_var_name,
                                     graph_label_name = NULL,
                                     cateogrical_var = NULL,
-                                    y_lim = NULL) {
+                                    y_lim = NULL,
+                                    plot_color = F,
+                                    debug = F) {
 
   datatype = as.vector(sapply(data, class))
   if(all(datatype == 'numeric'| datatype == 'factor' | datatype == 'integer')){
@@ -128,17 +130,31 @@ two_way_interaction_plot = function(data,
     y_lim = c(floor(min(final_df$value)) - 0.5,ceiling(max(final_df$value)) + 0.5)
   }
 
-  plot = final_df %>%
-    ggplot(aes(y = value, x = var1_category, group = var2_category)) +
-    geom_point() +
-    geom_line(aes(linetype = var2_category)) +
-    labs(y = response_var_plot_label,
-         x = predict_var1_plot_label,
-         linetype = predict_var2_plot_label) +
-    scale_linetype_discrete(labels = c("High", "Low")) +
-    theme_bw() +
-    ylim(y_lim[1],y_lim[2])
+  if (debug) {
+    return(final_df)
+  }
 
+  if (plot_color){
+    plot = final_df %>%
+      ggplot(aes(y = value, x = var1_category, color = var2_category)) +
+      geom_point() +
+      geom_line(aes(group = var2_category)) +
+      labs(y = response_var_plot_label,
+           x = predict_var1_plot_label,
+           color = predict_var2_plot_label) +
+      papaja::theme_apa() +
+      ylim(y_lim[1],y_lim[2])
+  } else{
+    plot = final_df %>%
+      ggplot(aes(y = value, x = var1_category, group = var2_category)) +
+      geom_point() +
+      geom_line(aes(linetype = var2_category)) +
+      labs(y = response_var_plot_label,
+           x = predict_var1_plot_label,
+           linetype = predict_var2_plot_label) +
+      papaja::theme_apa() +
+      ylim(y_lim[1],y_lim[2])
+  }
 
   return(plot)
 

@@ -15,4 +15,5 @@ Depends:
     nlme,
     stringr
 Imports: 
-    sjstats
+    sjstats,
+    papaja

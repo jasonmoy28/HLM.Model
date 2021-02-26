@@ -60,7 +60,9 @@ model_summary_with_plot = function(data, response_variable,
                           model_performance = c('R2_fixed_effect','R2_full_model'),
                           return_result = NULL,
                           print_result = c('short_summary','plot'),
-                          y_lim = NULL) {
+                          y_lim = NULL,
+                          plot_color = F,
+                          debug = F) {
   # Required library
 
   # All data must be dummy-code or factorized before passing into the function
@@ -95,7 +97,9 @@ model_summary_with_plot = function(data, response_variable,
                                                 predict_var_name = graphing_interaction_factor,
                                                 cateogrical_var = cateogrical_var,
                                                 graph_label_name = graph_label_name,
-                                                y_lim = y_lim)
+                                                y_lim = y_lim,
+                                                plot_color = plot_color,
+                                                debug = F)
 
     } else if (!is.null(three_way_interaction_factor) & (any(print_result %in% 'plot') | any(return_result %in% 'plot'))) {
     interaction_plot = three_way_interaction_plot(data = data,
@@ -103,7 +107,9 @@ model_summary_with_plot = function(data, response_variable,
                                                   predict_var_name = three_way_interaction_factor,
                                                   cateogrical_var = cateogrical_var,
                                                   graph_label_name = graph_label_name,
-                                                  y_lim = y_lim)
+                                                  y_lim = y_lim,
+                                                  plot_color = plot_color,
+                                                  debug = F)
     } else{
       interaction_plot = NULL
     }

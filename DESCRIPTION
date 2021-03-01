@@ -16,4 +16,5 @@ Imports:
     nlme,
     stringr,
     tibble,
-    performance
+    performance,
+    magrittr

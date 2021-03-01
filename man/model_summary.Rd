@@ -24,7 +24,6 @@ a dataframe with estimate, degree of freedom, p_value, and whether that p_value 
 Short summary of the HLM Model
 }
 \examples{
-model_summary(model)
 
 
 }

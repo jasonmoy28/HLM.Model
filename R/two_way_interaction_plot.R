@@ -8,32 +8,13 @@
 #' @param graph_label_name vector of length 3 or function. Vector should be passed in the form of c(response_var, predict_var1, predict_var2). Function should be passed as a switch function that return the label based on the name passed (e.g., a switch function)
 #' @param cateogrical_var list. use the form list(var_name1 = c(upper_bound1, lower_bound1), [var_name2 = c(upper_bound2, lower_bound2])
 #' @param y_lim vector of length 2. c(lower_limit, upper_limit)
+#' @param plot_color logical. default as F. Set to T if you want to plot in color
+#' @param debug ingore this parameter
 #'
 #' @return ggplot object. two-way interaction plot
 #' @export
 #'
-#' @examples two_way_interaction_plot(data = processed_df,
-#'                                    predcit_var_name = c('JI_Individual','Gender_Individual'),
-#'                                    graph_label_name = c('Job Satisfaction', 'Job Insecurity', 'Gender')) # response variable is job satisfaction. Two prediction variables are job insecurity and gender
-#'
-#'          two_way_interaction_plot(data = processed_df,
-#'                                    predcit_var_name = c('JI_Individual','Gender_Individual'),
-#'                                    graph_label_name = graph_label_name) # graph_label_name is a switch function, do not use parenthesis
-#'
-#' # graph_label_function should be able to return the name of the label if the variable name is passed in
-#' # example of graoh_label_name function, you must load the function in the script
-#' graph_label_name <- function(var_name) {
-#'                       var_name_processed =
-#'                          switch (var_name,
-#'                              'Variable_Name1' = 'Label_Name1',
-#'                              'Variable_Name2' = 'Label_Name2',
-#'                              'Variable_Name3' = 'Label_Name3')
-#'                          if (is.null(var_name_processed)) {
-#'                              var_name_processed = var_name }
-#'                          return(var_name_processed)
-#'                        }
-#'
-#'
+#' @examples
 #'
 #'
 two_way_interaction_plot = function(data,
@@ -47,7 +28,7 @@ two_way_interaction_plot = function(data,
 
   datatype = as.vector(sapply(data, class))
   if(all(datatype == 'numeric'| datatype == 'factor' | datatype == 'integer')){
-    data = data %>% mutate_all(as.numeric)
+    data = dplyr::mutate_all(data, as.numeric)
   } else{
     return('Error: All columns must be dummy coded or factored. Consider using as.factor() or as.numeric()')
   }
@@ -55,14 +36,12 @@ two_way_interaction_plot = function(data,
   response_var = as.character(nlme_object$call$fixed)[2]
   predict_var1 = predict_var_name[1]
   predict_var2 = predict_var_name[2]
-  mean_df = data %>%
-    summarise_all(mean,na.rm = T)
+  mean_df = dplyr::summarise_all(data, mean,na.rm = T)
 
-  upper_df = data %>%
-    summarise_all(.funs = function(.){mean(.,na.rm = T) + 1*sd(.,na.rm = T)})
+  upper_df = dplyr::summarise_all(data, .funs = function(.){mean(.,na.rm = T) + 1*stats::sd(.,na.rm = T)})
 
-  lower_df = data %>%
-    summarise_all(.funs = function(.){mean(.,na.rm = T) - 1*sd(.,na.rm = T)})
+  lower_df =
+    dplyr::summarise_all(data, .funs = function(.){mean(.,na.rm = T) - 1*stats::sd(.,na.rm = T)})
 
   # Specify the categorical variable upper and lower bound directly
   if (!is.null(cateogrical_var)) {
@@ -91,10 +70,10 @@ two_way_interaction_plot = function(data,
   lower_lower_df[predict_var1] = lower_df[predict_var1]
   lower_lower_df[predict_var2] = lower_df[predict_var2]
 
-  upper_upper_predicted_value = predict(nlme_object,newdata = upper_upper_df,level = 0)
-  upper_lower_predicted_value = predict(nlme_object,newdata = upper_lower_df,level = 0)
-  lower_upper_predicted_value = predict(nlme_object,newdata = lower_upper_df,level = 0)
-  lower_lower_predicted_value = predict(nlme_object,newdata = lower_lower_df,level = 0)
+  upper_upper_predicted_value = stats::predict(nlme_object,newdata = upper_upper_df,level = 0)
+  upper_lower_predicted_value = stats::predict(nlme_object,newdata = upper_lower_df,level = 0)
+  lower_upper_predicted_value = stats::predict(nlme_object,newdata = lower_upper_df,level = 0)
+  lower_lower_predicted_value = stats::predict(nlme_object,newdata = lower_lower_df,level = 0)
 
   final_df = data.frame(
     value = c(upper_upper_predicted_value,upper_lower_predicted_value,lower_upper_predicted_value,lower_lower_predicted_value),
@@ -135,25 +114,25 @@ two_way_interaction_plot = function(data,
   }
 
   if (plot_color){
-    plot = final_df %>%
-      ggplot(aes(y = value, x = var1_category, color = var2_category)) +
-      geom_point() +
-      geom_line(aes(group = var2_category)) +
-      labs(y = response_var_plot_label,
+    plot =
+      ggplot2::ggplot(final_df, ggplot2::aes(y = value, x = var1_category, color = var2_category)) +
+      ggplot2::geom_point() +
+      ggplot2::geom_line(ggplot2::aes(group = var2_category)) +
+      ggplot2::labs(y = response_var_plot_label,
            x = predict_var1_plot_label,
            color = predict_var2_plot_label) +
       papaja::theme_apa() +
-      ylim(y_lim[1],y_lim[2])
+      ggplot2::ylim(y_lim[1],y_lim[2])
   } else{
-    plot = final_df %>%
-      ggplot(aes(y = value, x = var1_category, group = var2_category)) +
-      geom_point() +
-      geom_line(aes(linetype = var2_category)) +
-      labs(y = response_var_plot_label,
+    plot =
+      ggplot2::ggplot(final_df, ggplot2::aes(y = value, x = var1_category, group = var2_category)) +
+      ggplot2::geom_point() +
+      ggplot2::geom_line(ggplot2::aes(linetype = var2_category)) +
+      ggplot2::labs(y = response_var_plot_label,
            x = predict_var1_plot_label,
            linetype = predict_var2_plot_label) +
       papaja::theme_apa() +
-      ylim(y_lim[1],y_lim[2])
+      ggplot2::ylim(y_lim[1],y_lim[2])
   }
 
   return(plot)

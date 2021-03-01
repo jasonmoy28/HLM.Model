@@ -8,7 +8,7 @@
 #' @return a dataframe with estimate, degree of freedom, p_value, and whether that p_value is significant
 #' @export
 #'
-#' @examples model_summary(model)
+#' @examples
 #'
 #'
 model_summary <- function(nlme_object,
@@ -19,14 +19,14 @@ model_summary <- function(nlme_object,
 
   return_df = summary %>%
     tibble::rownames_to_column(., var = 'variable') %>%
-    select(variable,tTable.Value,tTable.DF,tTable.p.value) %>%
-    mutate(estimate = round(tTable.Value,3)) %>%
-    rename(DF = tTable.DF) %>%
-    mutate(p_value = round(tTable.p.value, 3)) %>%
-    mutate(significant = case_when(p_value <= 0.001 ~ '***',
+    dplyr::select(variable,tTable.Value,tTable.DF,tTable.p.value) %>%
+    dplyr::mutate(estimate = round(tTable.Value,3)) %>%
+    dplyr::rename(DF = tTable.DF) %>%
+    dplyr::mutate(p_value = round(tTable.p.value, 3)) %>%
+    dplyr::mutate(significant = dplyr::case_when(p_value <= 0.001 ~ '***',
                                    p_value <= 0.01 & p_value > 0.001 ~ '**',
                                    p_value < 0.05 & p_value > 0.01 ~ '*')) %>%
-    select(variable,estimate,DF, p_value,significant)
+    dplyr::select(variable,estimate,DF, p_value,significant)
 
   R2_conditional_df = as.data.frame(NULL,NULL,NULL,NULL,NULL)
   R2_marginal_df = as.data.frame(NULL,NULL,NULL,NULL,NULL)

@@ -9,7 +9,10 @@ three_way_interaction_plot(
   nlme_object,
   predict_var_name,
   cateogrical_var = NULL,
-  graph_label_name = NULL
+  graph_label_name = NULL,
+  y_lim = NULL,
+  debug = F,
+  plot_color = F
 )
 }
 \arguments{
@@ -22,6 +25,12 @@ three_way_interaction_plot(
 \item{cateogrical_var}{list. use the form list(var_name1 = c(upper_bound1, lower_bound1), [var_name2 = c(upper_bound2, lower_bound2])}
 
 \item{graph_label_name}{vector of length 3 or function. Vector should be passed in the form of c(response_var, predict_var1, predict_var2, predict_var3). Function should be passed as a switch function that return the label based on the name passed (e.g., a switch function)}
+
+\item{y_lim}{vector of two number. set the y_lim of the plot}
+
+\item{debug}{ingore this parameter}
+
+\item{plot_color}{logical. default as F. Set to T if you want to plot in color}
 }
 \value{
 ggplot object. three-way interaction plot
@@ -30,26 +39,5 @@ ggplot object. three-way interaction plot
 This will create a three-way interaction plot. It uses the predict function on the lme object to get the values of the independent variable using the values of the independent variable that is 1 standard deviation above and below the mean.
 }
 \examples{
-three_way_interaction_plot(data = processed_df,
-                                   predcit_var_name = c('JI_Individual','Gender_Individual', 'SES_Country'), # only 3 elements
-                                   graph_label_name = c('Job Satisfaction', 'Job Insecurity', 'Gender')) # response variable is job satisfaction. Two prediction variables are job insecurity and gender
-
-         three_way_interaction_plot(data = processed_df,
-                                   predcit_var_name = c('JI_Individual','Gender_Individual', 'SES_Country'), # only 3 elements
-                                   graph_label_name = graph_label_name) # graph_label_name is a switch function, do not use parenthesis
-
-
-# graph_label_function should be able to return the name of the label if the variable name is passed in
-# example of graoh_label_name function, you must load the function in the script
-graph_label_name <- function(var_name) {
-                      var_name_processed =
-                         switch (var_name,
-                             'Variable_Name1' = 'Label_Name1',
-                             'Variable_Name2' = 'Label_Name2',
-                             'Variable_Name3' = 'Label_Name3')
-                         if (is.null(var_name_processed)) {
-                             var_name_processed = var_name }
-                         return(var_name_processed)
-                       }
 
 }

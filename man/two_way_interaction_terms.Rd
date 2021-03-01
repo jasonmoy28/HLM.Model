@@ -16,7 +16,6 @@ vector. The vector is essential for the lme formula used in function `HLM.Model:
 Essential for HLM.Model::HLM_Model
 }
 \examples{
- two_way_interaction_terms(c('Gender','Education','SES'))
 
 
 }

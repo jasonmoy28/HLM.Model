@@ -45,12 +45,6 @@ An object of class "lme" representing the linear mixed-effects model fit.
 The function calls the `nlme::lme`. See `nlme::lme` for full documentation
 }
 \examples{
-model_summary(data = processed_df,
-             response_variable = 'JS_SCALE',
-             level_1_factors = c('JI_Individual','Gender_Individual', 'SES_Individual'),
-             level_2_factors = c('UE_Country'),
-             two_way_interaction_factor = c('JI_Individual', 'SES_Individual'), # pass either two-way or three-way interaction factor, not both
-             id = 'Country')
 
 
 }

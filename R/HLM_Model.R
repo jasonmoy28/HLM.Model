@@ -16,12 +16,7 @@
 #' @return An object of class "lme" representing the linear mixed-effects model fit.
 #' @export
 #'
-#' @examples model_summary(data = processed_df,
-#'              response_variable = 'JS_SCALE',
-#'              level_1_factors = c('JI_Individual','Gender_Individual', 'SES_Individual'),
-#'              level_2_factors = c('UE_Country'),
-#'              two_way_interaction_factor = c('JI_Individual', 'SES_Individual'), # pass either two-way or three-way interaction factor, not both
-#'              id = 'Country')
+#' @examples
 #'
 #'
 HLM_model <- function(data, response_variable,
@@ -53,12 +48,21 @@ HLM_model <- function(data, response_variable,
   }
   fixed_factors = c(fixed_factors,two_way_interaction_terms,three_way_interaction_terms)
   # Create the formula for fixed factor
-  fixed_factors_formula = as.formula(paste(paste(response_variable, '~'), paste(fixed_factors, collapse = '+')))
+  fixed_factors_formula = stats::as.formula(paste(paste(response_variable, '~'), paste(fixed_factors, collapse = '+')))
   # Created the formula for random factors
-  random_factors_formula = as.formula(paste('~ 1 +', paste(random_factors, collapse = '+'), paste('|',id)))
-  ctrl = lmeControl(opt=opt_control)
+  random_factors_formula = stats::as.formula(paste('~ 1 +', paste(random_factors, collapse = '+'), paste('|',id)))
+  ctrl = nlme::lmeControl(opt=opt_control)
   # Run lme model
-  model = do.call("lme", list(fixed = fixed_factors_formula,
+  getfun<-function(x) {
+    if(length(grep("::", x))>0) {
+      parts<-strsplit(x, "::")[[1]]
+      getExportedValue(parts[1], parts[2])
+    } else {
+      x
+    }
+  }
+
+  model = do.call(getfun("nlme::lme"), list(fixed = fixed_factors_formula,
                               random = random_factors_formula,
                               data = quote(data),
                               na.action = na.action,

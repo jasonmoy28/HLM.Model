@@ -18,8 +18,11 @@ model_summary_with_plot(
   opt_control = "optim",
   na.action = na.exclude,
   model_performance = c("R2_fixed_effect", "R2_full_model"),
-  return_result = "none",
-  print_result = c("short_summary", "plot")
+  return_result = NULL,
+  print_result = c("short_summary", "plot"),
+  y_lim = NULL,
+  plot_color = F,
+  debug = F
 )
 }
 \arguments{
@@ -52,6 +55,12 @@ model_summary_with_plot(
 \item{return_result}{optional vector. Choose from `short_summary`,`long_summary`, `model`,`plot`,`none`. `none` return nothing. `short_summary` return a short model summary. `long_summary` return the summary using the `base::summary` function. `model` return a lme object. `plot` return the interaction plot.}
 
 \item{print_result}{optional vector. Choose from `both`, `long_summary`, `short_summary`, `plot`, `none`. `short_summary` return a short model summary. `long_summary` return the summary using the base::summary. `plot` return the interaction plot.}
+
+\item{y_lim}{vector of length 2. c(lower_limit, upper_limit)}
+
+\item{plot_color}{logical. default as F. Set to T if you want to plot in color}
+
+\item{debug}{ignore this parameter}
 }
 \value{
 return a list of all requested items in the order of model, short_summary, long_summary, plot
@@ -60,26 +69,5 @@ return a list of all requested items in the order of model, short_summary, long_
 A integrated function that combines all of the functionality of the pacakge.
 }
 \examples{
-model_summary(data = processed_df,
-             response_variable = 'JS_SCALE',
-             level_1_factors = c('JI_Individual','Gender_Individual', 'SES_Individual'),
-             level_2_factors = c('UE_Country'),
-             two_way_interaction_factor = c('JI_Individual', 'SES_Individual'),
-             id = 'Country',
-             graph_label_name = graph_label_name)
-
-# graph_label_function should be able to return the name of the label if the variable name is passed in
-# example of graoh_label_name function, you must load the function in the script
-graph_label_name <- function(var_name) {
-                      var_name_processed =
-                         switch (var_name,
-                             'Variable_Name1' = 'Label_Name1',
-                             'Variable_Name2' = 'Label_Name2',
-                             'Variable_Name3' = 'Label_Name3')
-                         if (is.null(var_name_processed)) {
-                             var_name_processed = var_name }
-                         return(var_name_processed)
-                       }
-
 
 }

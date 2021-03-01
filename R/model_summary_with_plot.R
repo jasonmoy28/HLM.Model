@@ -18,33 +18,14 @@
 #' @param opt_control optional character. default to `optim`. Be aware that `nlme::lme` default to nlminb. See `nlme::lme` for other option
 #' @param model_performance optional vector. default to c('R2_fixed_effect','R2_full_model'). `R2_full_model` for conditional R^2. `R2_fixed_effect` for marginal R^2. `icc` for intraclass correlation coefficient. Used the `performance::r2()` and `performance::icc()` for model performance
 #' @param y_lim vector of length 2. c(lower_limit, upper_limit)
+#' @param plot_color logical. default as F. Set to T if you want to plot in color
+#' @param debug ignore this parameter
 #'
 #' @return
 #' return a list of all requested items in the order of model, short_summary, long_summary, plot
 #' @export
 #'
 #' @examples
-#' model_summary(data = processed_df,
-#'              response_variable = 'JS_SCALE',
-#'              level_1_factors = c('JI_Individual','Gender_Individual', 'SES_Individual'),
-#'              level_2_factors = c('UE_Country'),
-#'              two_way_interaction_factor = c('JI_Individual', 'SES_Individual'),
-#'              id = 'Country',
-#'              graph_label_name = graph_label_name)
-#'
-#' # graph_label_function should be able to return the name of the label if the variable name is passed in
-#' # example of graoh_label_name function, you must load the function in the script
-#' graph_label_name <- function(var_name) {
-#'                       var_name_processed =
-#'                          switch (var_name,
-#'                              'Variable_Name1' = 'Label_Name1',
-#'                              'Variable_Name2' = 'Label_Name2',
-#'                              'Variable_Name3' = 'Label_Name3')
-#'                          if (is.null(var_name_processed)) {
-#'                              var_name_processed = var_name }
-#'                          return(var_name_processed)
-#'                        }
-#'
 #'
 model_summary_with_plot = function(data, response_variable,
                           level_1_factors,
@@ -69,7 +50,7 @@ model_summary_with_plot = function(data, response_variable,
   # Check datatype is correct
   datatype = as.vector(sapply(data, class))
   if(all(datatype == 'numeric'| datatype == 'factor' | datatype == 'integer')){
-    data = data %>% mutate_all(as.numeric)
+    data = data %>% dplyr::mutate_all(as.numeric)
   } else{
     return('Error: All columns must be dummy coded or factored. Consider using as.factor() or as.numeric()')
   }
@@ -132,8 +113,6 @@ model_summary_with_plot = function(data, response_variable,
   if(any(print_result %in% 'plot')){
     try(print(interaction_plot))
   }
-
-
 
   # Check return result
   if (length(return_result) != 0) {

@@ -7,7 +7,6 @@
 #' @export
 #'
 #' @examples
-#'  two_way_interaction_terms(c('Gender','Education','SES'))
 #'
 #'
 two_way_interaction_terms <- function(interaction_terms) {
